@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "1조",
+    "password": "5738",
+    "count": 2
+  },
+  {
+    "id": 2,
+    "name": "2조",
+    "password": "2194",
+    "count": 4
+  },
+  {
+    "id": 3,
+    "name": "3조",
+    "password": "8642",
+    "count": 4
+  },
+  {
+    "id": 4,
+    "name": "4조",
+    "password": "1479",
+    "count": 2
+  },
+  {
+    "id": 5,
+    "name": "5조",
+    "password": "6523",
+    "count": 0
+  },
+  {
+    "id": 6,
+    "name": "6조",
+    "password": "3087",
+    "count": 0
+  },
+  {
+    "id": 7,
+    "name": "7조",
+    "password": "9361",
+    "count": 4
+  },
+  {
+    "id": 8,
+    "name": "8조",
+    "password": "4250",
+    "count": 0
+  },
+  {
+    "id": 9,
+    "name": "9조",
+    "password": "7106",
+    "count": 0
+  },
+  {
+    "id": 10,
+    "name": "10조",
+    "password": "1932",
+    "count": 0
+  },
+  {
+    "id": 11,
+    "name": "11조",
+    "password": "7234",
+    "count": 1
+  },
+  {
+    "id": 12,
+    "name": "12조",
+    "password": "1841",
+    "count": 1
+  }
+]
