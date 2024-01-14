@@ -23,8 +23,9 @@ export default function Component() {
   }, []);
 
   const user: any = users.find((u: any) => u.name === session?.user?.name);
-
-  console.log('users', users);
+  // console.log('session?.user?.name', JSON.stringify(session));
+  // console.log('users', users);
+  // console.log('user', user);
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mx-auto">
       <div className="flex justify-between items-center mb-4">
@@ -39,6 +40,13 @@ export default function Component() {
           <span className="text-lg text-gray-500 ml-1">/6★</span>
         </div>
       </div>
+      <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
+        <div
+          className="h-full bg-blue-500 rounded-full"
+          style={{ width: `${Math.round((user?.count/6)*100).toFixed(0)}%` }}
+        ></div>
+      </div>
+      <br></br>
 
       <div className="mb-4 relative">
         <img
