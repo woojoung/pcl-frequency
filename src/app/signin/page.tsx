@@ -65,7 +65,8 @@ export default function Login() {
                 <input
                   key={index}
                   type="number"
-                  pattern="\\d*"
+                  pattern="[0-9]*"
+                  inputMode="numeric"
                   value={pin}
                   onChange={(e) => handleChange(index, e.target.value, inputRefs)}
                   maxLength={1}
