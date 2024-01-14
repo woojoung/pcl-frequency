@@ -64,7 +64,7 @@ export default function Login() {
               {pins.map((pin, index) => (
                 <input
                   key={index}
-                  type="text"
+                  type="number"
                   value={pin}
                   onChange={(e) => handleChange(index, e.target.value, inputRefs)}
                   maxLength={1}
