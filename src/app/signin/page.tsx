@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const [pins, setPins] = useState(['', '', '', '']);
-  const inputRefs: any = useRef([0, 1, 2, 3].map(() => useRef(null)));
+  const inputRefs: any = useRef([0, 1, 2, 3].map(() => React.createRef()));
   const router = useRouter()
 
 
@@ -29,7 +29,7 @@ export default function Login() {
   }
 
 
-  const handleChange = async (index: number, value: string) => {
+  const handleChange = async (index: number, value: string, refs: any) => {
     
     let newPins = [];
     // 입력값이 숫자이고, 4자리인지 확인
@@ -43,10 +43,10 @@ export default function Login() {
     }
 
     // 입력값이 변경될 때 해당 입력란으로 포커스 이동
-    if (index < inputRefs.current.length - 1) {
-      inputRefs.current[index + 1].current?.focus();
+    if (index < refs.current.length - 1) {
+      refs.current[index + 1].current?.focus();
     }
-    console.log('inputRefs', inputRefs);
+    console.log('inputRefs', refs);
 
     
   };
@@ -66,7 +66,7 @@ export default function Login() {
                   key={index}
                   type="text"
                   value={pin}
-                  onChange={(e) => handleChange(index, e.target.value)}
+                  onChange={(e) => handleChange(index, e.target.value, inputRefs)}
                   maxLength={1}
                   ref={inputRefs.current[index]}
                   className="w-14 text-center text-lg font-semibold border rounded-md p-2 bg-gray-400"

@@ -86,12 +86,12 @@ export default function Component() {
           </thead>
           <tbody>
             {users.map((user: any)=>{
-                  return(<tr className="text-sm">
+                  return(<tr key={user.id} className="text-sm">
                       <td className="px-2 py-1" style={{color: '#0C3659'}}>{user.name}</td>
                       {[1, 2, 3, 4, 5, 6].map((index) => (
                         <td key={index} className="px-2 py-1">
                           {index <= user.count ? (
-                            <div className="w-6 h-6 bg-blue-500 rounded-full" />
+                            <div className="w-6 h-6 bg-blue-500 " />
                           ) : (
                             <div className="w-6 h-6 bg-gray-400" />
                           )}
