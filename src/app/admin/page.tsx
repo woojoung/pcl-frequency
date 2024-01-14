@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
  * @see https://v0.dev/t/1olEm3m7Bot
  */
 export default function Component() {
-  const [user, setUser] = useState('0');
+  const [user, setUser] = useState('');
   const [users, setUsers] : any = useState([]);
 
   const fetchUsers = async () => {
@@ -39,7 +39,7 @@ export default function Component() {
     }
     const data = await response.json();
     console.log('API 응답 데이터:', data);
-    setUser('0');
+    setUser('');
   }
 
   const removeStamp = async (e: any) => {
@@ -58,7 +58,7 @@ export default function Component() {
     }
     const data = await response.json();
     console.log('API 응답 데이터:', data);
-    setUser('0');
+    setUser('');
   }
 
   return (
