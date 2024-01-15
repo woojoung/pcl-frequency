@@ -48,6 +48,7 @@ export default function Component() {
     });
 
     if (!response.ok) {
+      console.log('registerScore response',JSON.stringify(response))
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.json();
@@ -56,44 +57,6 @@ export default function Component() {
     setRoundScore('');
     setRoundId('')
   }
-
-  // const addStamp = async (e: any, roundId: string, roundScore: number) => {
-  //   e.preventDefault();
-  //   const userId = user || 0;
-  //   const response = await fetch('/api/users', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ endpoint: 'register', userId }),
-  //   });
-
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! Status: ${response.status}`);
-  //   }
-  //   const data = await response.json();
-  //   console.log('API 응답 데이터:', data);
-  //   setUser('');
-  // }
-
-  // const removeStamp = async (e: any) => {
-  //   e.preventDefault();
-  //   const userId = user || 0;
-  //   const response = await fetch('/api/users', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ endpoint: 'remove', userId }),
-  //   });
-
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! Status: ${response.status}`);
-  //   }
-  //   const data = await response.json();
-  //   console.log('API 응답 데이터:', data);
-  //   setUser('');
-  // }
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto" style={{ backgroundImage: 'url("/login.png")', backgroundSize: 'cover' }}>
@@ -127,7 +90,7 @@ export default function Component() {
                         .filter(key => key !== "id" && key !== "name")
                         .map((key)=> {
                           return (<td key={score.id} className="px-2 py-1">
-                            <div className="w-6 h-6 text-center bg-gray-300">{score[key]}</div>
+                            <div className="w-6 h-6 text-center bg-gray-300" style={{color: '#0C3659'}}>{score[key]}</div>
                           </td>) 
                         })
                         
