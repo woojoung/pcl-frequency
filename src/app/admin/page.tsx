@@ -9,29 +9,42 @@ import { useRouter } from 'next/navigation'
  */
 export default function Component() {
   const [user, setUser] = useState('');
-  const [users, setUsers] : any = useState([]);
+  const [round, setRoundId] = useState('');
+  const [score, setRoundScore] = useState('');
+  // const [users, setUsers] : any = useState([]);
+  const [scores, setScores] : any = useState([]);
 
-  const fetchUsers = async () => {
-    const response = await fetch('/api/users', {method:'GET'});
-    console.log('response', response);
+  // const fetchUsers = async () => {
+  //   const response = await fetch('/api/users', { method:'GET' });
+  //   console.log('fetchUsers response', response);
+  //   const data = await response.json();
+  //   console.log('fetchUsers response data', data);
+  //   setUsers(data.users);
+  // };
+
+  const fetchScores = async () => {
+    const response = await fetch('/api/scores', { method:'GET' });
+    console.log('fetchScores response', response);
     const data = await response.json();
-    console.log('data', data);
-    setUsers(data.users);
+    console.log('fetchScores response data', data);
+    setScores(data.scores);
   };
 
   useEffect(() => {
-    fetchUsers();
+    // fetchUsers();
+    fetchScores();
   }, [user]);
 
-  const addStamp = async (e: any) => {
-    e.preventDefault();
+  const registerScore = async () => {
     const userId = user || 0;
-    const response = await fetch('/api/users', {
+    const roundId = `r${round}`;
+    const roundScore = parseInt(score);
+    const response = await fetch('/api/scores', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ endpoint: 'add', userId }),
+      body: JSON.stringify({ endpoint: 'register', userId, roundId, roundScore }),
     });
 
     if (!response.ok) {
@@ -40,26 +53,47 @@ export default function Component() {
     const data = await response.json();
     console.log('API 응답 데이터:', data);
     setUser('');
+    setRoundScore('');
+    setRoundId('')
   }
 
-  const removeStamp = async (e: any) => {
-    e.preventDefault();
-    const userId = user || 0;
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ endpoint: 'remove', userId }),
-    });
+  // const addStamp = async (e: any, roundId: string, roundScore: number) => {
+  //   e.preventDefault();
+  //   const userId = user || 0;
+  //   const response = await fetch('/api/users', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ endpoint: 'register', userId }),
+  //   });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log('API 응답 데이터:', data);
-    setUser('');
-  }
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! Status: ${response.status}`);
+  //   }
+  //   const data = await response.json();
+  //   console.log('API 응답 데이터:', data);
+  //   setUser('');
+  // }
+
+  // const removeStamp = async (e: any) => {
+  //   e.preventDefault();
+  //   const userId = user || 0;
+  //   const response = await fetch('/api/users', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ endpoint: 'remove', userId }),
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! Status: ${response.status}`);
+  //   }
+  //   const data = await response.json();
+  //   console.log('API 응답 데이터:', data);
+  //   setUser('');
+  // }
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto" style={{ backgroundImage: 'url("/login.png")', backgroundSize: 'cover' }}>
@@ -85,27 +119,33 @@ export default function Component() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user: any)=>{
-                  return(<tr key={user.id} className="text-sm">
-                      <td className="px-2 py-1" style={{color: '#0C3659'}}>{user.name}</td>
-                      {[1, 2, 3, 4, 5, 6].map((index) => (
-                        <td key={index} className="px-2 py-1">
-                          {index <= user.count ? (
-                            <div className="w-6 h-6 bg-blue-500 " />
-                          ) : (
-                            <div className="w-6 h-6 bg-gray-400" />
-                          )}
-                        </td>
-                      ))}
-                      <td className="px-2 py-1" style={{color: '#0C3659'}}>{user.count}개</td>
+            {scores.map((score: any)=>{
+                  return(<tr key={score.id} className="text-sm">
+                      <td className="px-2 py-1" style={{color: '#0C3659'}}>{score.name}</td>
+                      {
+                        Object.keys(score)
+                        .filter(key => key !== "id" && key !== "name")
+                        .map((key)=> {
+                          return (<td key={score.id} className="px-2 py-1">
+                            <div className="w-6 h-6 text-center bg-gray-300">{score[key]}</div>
+                          </td>) 
+                        })
+                        
+                      }
+                      <td className="px-2 py-1 text-center" style={{color: '#0C3659'}}>{
+                        Object.keys(score)
+                        .filter(key => key !== "id" && key !== "name")
+                        .reduce((sum, key) => sum + score[key], 0)
+                      }개</td>
                     </tr>);
               })}
           </tbody>
         </table>
         <br></br>
+        <div className="flex space-x-4"> {/* 부모 요소에 flex 클래스와 간격을 주는 클래스를 추가 */}
         <input
           type="text"
-          placeholder='조 번호를 입력하세요'
+          placeholder='조 번호'
           className="w-full text-center text-lg font-semibold border rounded-md p-2"
           maxLength={2}
           value={user}
@@ -118,12 +158,45 @@ export default function Component() {
             color: 'black', // 텍스트 색상을 빨간색으로 지정
           }}
         />
+        <input
+          type="text"
+          placeholder='게임 번호'
+          className="w-full text-center text-lg font-semibold border rounded-md p-2"
+          maxLength={1}
+          value={round}
+          onChange={(e) => setRoundId(e.target.value)}
+          style={{
+            // width: '50px', // 각 입력란의 너비 조절
+            marginRight: '10px', // 입력란 간의 간격 조절
+            border: '1px solid #ccc',
+            textAlign: 'center',
+            color: 'black', // 텍스트 색상을 빨간색으로 지정
+          }}
+        />
+        <input
+          type="text"
+          placeholder='스탬프 수'
+          className="w-full text-center text-lg font-semibold border rounded-md p-2"
+          maxLength={1}
+          value={score}
+          onChange={(e) => setRoundScore(e.target.value)}
+          style={{
+            // width: '50px', // 각 입력란의 너비 조절
+            marginRight: '10px', // 입력란 간의 간격 조절
+            border: '1px solid #ccc',
+            textAlign: 'center',
+            color: 'black', // 텍스트 색상을 빨간색으로 지정
+          }}
+        />
+          
+        </div>
+
         <br></br>
         <br></br>
 
         <div className="flex space-x-4"> {/* 부모 요소에 flex 클래스와 간격을 주는 클래스를 추가 */}
-          <button className="flex-1 h-20 bg-blue-500 text-white py-2 px-4 rounded" onClick={addStamp}>스탬프 지급</button>
-          <button className="flex-1 h-20 bg-red-500 text-white py-2 px-4 rounded" onClick={removeStamp}>스탬프 회수</button>
+          <button className="flex-1 h-20 bg-blue-500 text-white py-2 px-4 rounded" style={{backgroundColor: '#0C3659'}} onClick={registerScore}>저장하기</button>
+          {/* <button className="flex-1 h-20 bg-red-500 text-white py-2 px-4 rounded" onClick={removeStamp}>스탬프 회수</button> */}
         </div>
         <br></br>
       </div>

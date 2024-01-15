@@ -9,7 +9,7 @@ export default async function handler(req: any, res: any) {
     const scoresData = await fs.readFile(scoresFilePath, "utf-8");
     const scores = JSON.parse(scoresData);
 
-    res.status(200).json({ users: scores });
+    res.status(200).json({ scores });
   } else if (req.method === "POST") {
     // POST 요청 처리
     const { endpoint } = req.body;
@@ -17,6 +17,13 @@ export default async function handler(req: any, res: any) {
     if (endpoint === "register") {
       const { userId, roundId, roundScore } = req.body;
       console.log("userId", userId);
+      // max roundScore = 3
+      if (roundScore > 3 || roundScore < 0) {
+        res.status(400).json({
+          message: `올바르지 않은 score: ${roundScore.toString()} 입니다.`,
+        });
+      }
+
       // API 1에 대한 처리
       const scoresFilePath = path.join(process.cwd(), "data", "scores.json");
       const scoresData = await fs.readFile(scoresFilePath, "utf-8");
@@ -27,6 +34,7 @@ export default async function handler(req: any, res: any) {
       // userId와 같은 id를 가진 데이터가 있다면 수정
       if (scoreIndex !== -1) {
         console.log("scores[scoreIndex]", JSON.stringify(scores[scoreIndex]));
+        console.log("scores[scoreIndex] roundId", JSON.stringify(roundId));
         // 예시: 해당 사용자의 이름을 변경
         scores[scoreIndex][roundId] = roundScore;
       }

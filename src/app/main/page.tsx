@@ -33,17 +33,17 @@ export default function Component() {
       </div>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>{user ? `${6 - user.count}` : 0}★ until break time</span>
+          <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>{user ? `${14 - user.count}` : 0}★ until break time</span>
         </div>
         <div className="flex items-baseline">
           <span className="text-3xl font-semibold" style={{color: '#0C3659'}}>{user ? `${user.count}` : 0}</span>
-          <span className="text-lg text-gray-500 ml-1">/6★</span>
+          <span className="text-lg text-gray-500 ml-1">/14★</span>
         </div>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
         <div
           className="h-full bg-blue-500 rounded-full"
-          style={{ width: `${Math.round((user?.count/6)*100).toFixed(0)}%` }}
+          style={{ width: `${Math.round((user?.count/14)*100).toFixed(0)}%` }}
         ></div>
       </div>
       <br></br>
@@ -70,10 +70,10 @@ export default function Component() {
       
       <div className="flex justify-center items-center">
         <div className="bg-gray-100 p-2 rounded-lg">
-          <div className="flex space-x-1">
+          <div className="flex flex-wrap gap-1">
             {(() => {
               const stars = [];
-              for (let index = 0; index < 6; index++) {
+              for (let index = 0; index < 14; index++) {
                 stars.push(<div key={index} className="w-12 h-6">
                   {index < user?.count ? (
                     <StarIcon color="#0C3659" style={{ color: '#0C3659' }} />
