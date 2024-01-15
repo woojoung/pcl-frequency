@@ -9,7 +9,7 @@ export default function Login() {
   const router = useRouter()
 
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (refs: any) => {
     const pinNumber = pins.join('');
     console.log('입력된 핀 넘버:', pinNumber);
     if(pinNumber.length !== 4) return;
@@ -22,20 +22,30 @@ export default function Login() {
         router.push('/main')
       } else {
         // TODO. 로그인 실패 처리 
+        setPins(['', '', '', ''])
+        // refs.current[0].current?.focus();
         router.push('/')
       }
     });
     
   }
 
+  const handleKeyDown = (index: number, event: any, refs: any) => {
+    
+    let newPins = [...pins];
+
+    if (event.key === 'Backspace' && index > 0 ) {
+      newPins[index] = '';
+      setPins(newPins);
+      if (index > 0) refs.current[index - 1].current?.focus();
+    }
+  };
+
 
   const handleChange = async (index: number, value: string, refs: any) => {
-    
     let newPins = [];
     // 입력값이 숫자이고, 4자리인지 확인
-    if (/^\d+$/.test(value) && value.length <= 1) {
-      console.log('index', index);
-      console.log('value', value);
+    if (/^\d*$/.test(refs.current[index].current?.value) && value.length <= 1) {
       newPins = [...pins];
       newPins[index] = value;
       setPins(newPins);
@@ -43,16 +53,13 @@ export default function Login() {
     }
 
     // 입력값이 변경될 때 해당 입력란으로 포커스 이동
-    if (index < refs.current.length - 1) {
+    if (/^\d+$/.test(value) && (index < (refs.current.length - 1))) {
       refs.current[index + 1].current?.focus();
     }
-    console.log('inputRefs', refs);
-
-    
   };
 
   useEffect(() => {
-    handleSubmit();
+    handleSubmit(inputRefs);
   }, [pins]);
   
     return (
@@ -69,6 +76,7 @@ export default function Login() {
                   inputMode="numeric"
                   value={pin}
                   onChange={(e) => handleChange(index, e.target.value, inputRefs)}
+                  onKeyDown={(e) => handleKeyDown(index, e, inputRefs)}
                   maxLength={1}
                   ref={inputRefs.current[index]}
                   className="w-14 text-center text-lg font-semibold border rounded-md p-2 bg-gray-400"
