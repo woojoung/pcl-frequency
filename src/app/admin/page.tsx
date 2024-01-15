@@ -195,7 +195,7 @@ export default function Component() {
         <br></br>
 
         <div className="flex space-x-4"> {/* 부모 요소에 flex 클래스와 간격을 주는 클래스를 추가 */}
-          <button className="flex-1 h-20 bg-blue-500 text-white py-2 px-4 rounded" style={{backgroundColor: '#0C3659'}} onClick={registerScore}>저장하기</button>
+          <button className="flex-1 h-20 bg-blue-500 text-white py-2 px-4 rounded" style={{backgroundColor: '#0C3659'}} onPointerDown={registerScore}>저장하기</button>
           {/* <button className="flex-1 h-20 bg-red-500 text-white py-2 px-4 rounded" onClick={removeStamp}>스탬프 회수</button> */}
         </div>
         <br></br>

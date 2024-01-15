@@ -18,12 +18,14 @@ export default function Login() {
       password: pinNumber,
       redirect: false
     }).then((result)=>{
+      // console.log('credential result', JSON.stringify(result))
       if(result?.ok){
         router.push('/main')
       } else {
         // TODO. 로그인 실패 처리 
+        alert('올바른 번호를 입력하세요!')
         setPins(['', '', '', ''])
-        // refs.current[0].current?.focus();
+        refs.current[0].current?.focus();
         router.push('/')
       }
     });
