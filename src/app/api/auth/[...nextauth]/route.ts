@@ -1,18 +1,11 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-import fs from "fs/promises";
-import path from "path";
+import { collection, getFirestore, getDocs } from "firebase/firestore";
 
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         id: {
           label: "조별 번호",
@@ -22,21 +15,20 @@ const handler = NextAuth({
         password: { label: "비밀번호", type: "password" },
       },
       async authorize(credentials, req) {
-        const usersFilePath = path.join(process.cwd(), "data", "users.json");
-
-        // console.log('credentials', credentials);
-        // console.log('req', req);
-
+        const db = getFirestore();
+        const usersCollection = collection(db, 'users');
+        console.log('credentials:', credentials);
+        console.log('req:', req);
+        console.log('db:', db);
+        console.log('usersCollection:', usersCollection);
         try {
-          const usersData = await fs.readFile(usersFilePath, "utf-8");
-          const users = JSON.parse(usersData);
+          const querySnapshot = await getDocs(usersCollection);
+          const data = querySnapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
+          console.log('데이터:', data);
 
-          // console.log('users', users);
-
-          // credentials.profile.id는 OAuth 프로바이더에서 제공하는 고유한 사용자 ID입니다.
-          const user = users.find(
+          const user = data.find(
             (u: any) => u.password === credentials?.password
-          );
+          ); 
 
           if (user) {
             console.log("login success", user);
@@ -46,8 +38,7 @@ const handler = NextAuth({
             return Promise.resolve(null);
           }
         } catch (error) {
-          console.error("Error reading or parsing users.json:", error);
-          return Promise.resolve(null);
+          console.error('데이터 가져오기 실패:', error);
         }
       },
     }),

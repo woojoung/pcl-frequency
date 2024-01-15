@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 export default function Login() {
   const [pins, setPins] = useState(['', '', '', '']);
   const inputRefs: any = useRef([0, 1, 2, 3].map(() => React.createRef()));
-  const router = useRouter()
-
+  const router = useRouter();
 
   const handleSubmit = async (refs: any) => {
     const pinNumber = pins.join('');
