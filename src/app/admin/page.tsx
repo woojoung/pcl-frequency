@@ -2,58 +2,61 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import firestore from "../firebase/firestore";
+import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc, orderBy,updateDoc } from 'firebase/firestore';
 
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/1olEm3m7Bot
  */
 export default function Component() {
-  const [user, setUser] = useState('');
-  const [round, setRoundId] = useState('');
+  const [userId, setUserId] = useState('');
+  const [roundId, setRoundId] = useState('');
   const [score, setRoundScore] = useState('');
-  // const [users, setUsers] : any = useState([]);
-  const [scores, setScores] : any = useState([]);
+  const [users, setUsers] : any = useState([]);
 
-  // const fetchUsers = async () => {
-  //   const response = await fetch('/api/users', { method:'GET' });
-  //   console.log('fetchUsers response', response);
-  //   const data = await response.json();
-  //   console.log('fetchUsers response data', data);
-  //   setUsers(data.users);
-  // };
-
-  const fetchScores = async () => {
-    const response = await fetch('/api/scores', { method:'GET' });
-    console.log('fetchScores response', response);
-    const data = await response.json();
-    console.log('fetchScores response data', data);
-    setScores(data.scores);
+  const findUsers = async () => {
+    const usersRef = query(collection(firestore, "users"), orderBy("id", "asc"))
+    const usersSnapshot = await getDocs(usersRef);
+    const users: any = usersSnapshot.docs.map((doc) => doc.data());
+    console.log('users: ', users);
+    setUsers(users);
   };
 
   useEffect(() => {
-    // fetchUsers();
-    fetchScores();
-  }, [user]);
+    findUsers();
+  }, [userId]);
 
   const registerScore = async () => {
-    const userId = user || 0;
-    const roundId = `r${round}`;
-    const roundScore = parseInt(score);
-    const response = await fetch('/api/scores', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ endpoint: 'register', userId, roundId, roundScore }),
-    });
-
-    if (!response.ok) {
-      console.log('registerScore response',JSON.stringify(response))
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    console.log('registerScore');
+    console.log('userId', userId);
+    const amount = parseInt(score);
+    const roundNum = parseInt(roundId);
+    // validate
+    if(amount > 3 || amount < 0) {
+      alert("프리퀀시를 확인해주세요 (0 < 프리퀀시 < 4)");
+      return;
     }
-    const data = await response.json();
-    console.log('API 응답 데이터:', data);
-    setUser('');
+    if(roundNum > 12 || roundNum < 0) {
+      alert("게임번호를 확인해주세요");
+      return;
+    }
+
+    const usersRef = query(collection(firestore, "users"), where("id", "==", parseInt(userId ?? '0')));
+    // 쿼리 실행
+    const querySnapshot = await getDocs(usersRef);
+    // 쿼리 결과 확인
+    if (!querySnapshot.empty) {
+      // 쿼리에 해당하는 문서가 존재할 경우
+      querySnapshot.forEach(async (doc) => {
+        const docRef = doc.ref;
+        // 필드 업데이트
+        await updateDoc(docRef, { [`round${roundId}`]: amount })
+      });
+    } else {
+      alert("조 번호를 확인해주세요!")
+    }
+    setUserId('');
     setRoundScore('');
     setRoundId('')
   }
@@ -82,23 +85,24 @@ export default function Component() {
             </tr>
           </thead>
           <tbody>
-            {scores.map((score: any)=>{
-                  return(<tr key={score.id} className="text-sm">
-                      <td className="px-2 py-1" style={{color: '#0C3659'}}>{score.name}</td>
+            {users.map((user: any)=>{
+                  return(<tr key={user.id} className="text-sm">
+                      <td className="px-2 py-1" style={{color: '#0C3659'}}>{user.name}</td>
                       {
-                        Object.keys(score)
-                        .filter(key => key !== "id" && key !== "name")
+                        Object.keys(user)
+                        .filter(key => key !== "id" && key !== "name" && key !== "password" && key !== "count")
+                        .sort()
                         .map((key)=> {
-                          return (<td key={score.id} className="px-2 py-1">
-                            <div className="w-6 h-6 text-center bg-gray-300" style={{color: '#0C3659'}}>{score[key]}</div>
+                          return (<td key={user.id} className="px-2 py-1">
+                            <div className="w-6 h-6 text-center bg-gray-300" style={{color: '#0C3659'}}>{user[key]}</div>
                           </td>) 
                         })
                         
                       }
                       <td className="px-2 py-1 text-center" style={{color: '#0C3659'}}>{
-                        Object.keys(score)
-                        .filter(key => key !== "id" && key !== "name")
-                        .reduce((sum, key) => sum + score[key], 0)
+                        Object.keys(user)
+                        .filter(key => key !== "id" && key !== "name" && key !== "password" && key !== "count")
+                        .reduce((sum, key) => sum + user[key], 0)
                       }개</td>
                     </tr>);
               })}
@@ -111,8 +115,8 @@ export default function Component() {
           placeholder='조 번호'
           className="w-full text-center text-lg font-semibold border rounded-md p-2"
           maxLength={2}
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
           style={{
             // width: '50px', // 각 입력란의 너비 조절
             marginRight: '10px', // 입력란 간의 간격 조절
@@ -126,7 +130,7 @@ export default function Component() {
           placeholder='게임 번호'
           className="w-full text-center text-lg font-semibold border rounded-md p-2"
           maxLength={1}
-          value={round}
+          value={roundId}
           onChange={(e) => setRoundId(e.target.value)}
           style={{
             // width: '50px', // 각 입력란의 너비 조절
@@ -138,7 +142,7 @@ export default function Component() {
         />
         <input
           type="text"
-          placeholder='스탬프 수'
+          placeholder='프리퀀시 수'
           className="w-full text-center text-lg font-semibold border rounded-md p-2"
           maxLength={1}
           value={score}

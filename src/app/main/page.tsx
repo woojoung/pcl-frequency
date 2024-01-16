@@ -1,6 +1,8 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import firestore from "../firebase/firestore";
+import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } from 'firebase/firestore';
 
 /**
  * v0 by Vercel.
@@ -8,21 +10,40 @@ import { useSession } from 'next-auth/react'
  */
 export default function Component() {
   const { data: session } = useSession();
+  const [user, setUser] = useState({name: ''});
   const [users, setUsers] = useState([]);
+  const [total, setTotalFrequency] = useState(0);
+
+  const findUsers = async () => {
+    const usersRef = query(collection(firestore, "users"))
+    const usersSnapshot = await getDocs(usersRef)
+    if (usersSnapshot.empty) {
+      console.log("일치하는 사용자가 없습니다.");
+      setUsers([]);
+    } 
+    const users: any = usersSnapshot.docs.map((doc) => doc.data());
+    console.log('users: ', users)
+    setUsers(users)
+
+    const user: any = users.find((u: any) => u.name === session?.user?.name);
+
+    if (user){
+      setUser(user);
+      let totalFrequency = Object.keys(user)
+      .filter(key => key !== "id" && key !== "name" && key !== "password" && key !== "count")
+      .reduce((sum, key) => sum + user[key], 0)
+      totalFrequency = totalFrequency > 14 ? 14 : totalFrequency;
+      setTotalFrequency(totalFrequency ?? 0);
+    }
+
+    
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await fetch('/api/users', {method:'GET'});
-      console.log('response', response);
-      const data = await response.json();
-      console.log('data', data);
-      setUsers(data.users);
-    };
-
-    fetchUsers();
+    findUsers();
   }, []);
 
-  const user: any = users.find((u: any) => u.name === session?.user?.name);
+  
   // console.log('session?.user?.name', JSON.stringify(session));
   // console.log('users', users);
   // console.log('user', user);
@@ -33,17 +54,17 @@ export default function Component() {
       </div>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>{user ? `${14 - user.count}` : 0}★ until break time</span>
+          <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>{user ? `${14 - total}` : 0}★ until break time</span>
         </div>
         <div className="flex items-baseline">
-          <span className="text-3xl font-semibold" style={{color: '#0C3659'}}>{user ? `${user.count}` : 0}</span>
+          <span className="text-3xl font-semibold" style={{color: '#0C3659'}}>{user ? `${total}` : 0}</span>
           <span className="text-lg text-gray-500 ml-1">/14★</span>
         </div>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
         <div
           className="h-full bg-blue-500 rounded-full"
-          style={{ width: `${Math.round((user?.count/14)*100).toFixed(0)}%` }}
+          style={{ width: `${Math.round((total/14)*100).toFixed(0)}%` }}
         ></div>
       </div>
       <br></br>
@@ -63,7 +84,7 @@ export default function Component() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center">
           <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>Wave Maker</h1>
           <p className="mt-2 text-center text-lg text-gray-600" style={{color: '#0C3659'}}>Break Time</p>
-          <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>{session ? `${session.user?.name}` : ''}</h1>
+          <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>{session ? `${user.name}` : ''}</h1>
         </div>
         
       </div>
@@ -75,7 +96,7 @@ export default function Component() {
               const stars = [];
               for (let index = 0; index < 14; index++) {
                 stars.push(<div key={index} className="w-12 h-6">
-                  {index < user?.count ? (
+                  {index < total ? (
                     <StarIcon color="#0C3659" style={{ color: '#0C3659' }} />
                   ) : (
                     <StarIcon className="text-gray-300" color="" />
