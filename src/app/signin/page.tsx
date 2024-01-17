@@ -1,9 +1,10 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
+  const { data: session } = useSession();
   const [pins, setPins] = useState(['', '', '', '']);
   const inputRefs: any = useRef([0, 1, 2, 3].map(() => React.createRef()));
   const router = useRouter();
@@ -60,6 +61,9 @@ export default function Login() {
   };
 
   useEffect(() => {
+    if (session && session.user) {
+      router.push('/main');
+    }
     handleSubmit(inputRefs);
   }, [pins]);
   
