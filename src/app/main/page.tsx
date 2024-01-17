@@ -28,7 +28,7 @@ export default function Component() {
     console.log('users: ', users)
     setUsers(users)
 
-    const user: any = users.find((u: any) => u.name === userSession?.user?.name);
+    const user: any = users.find((u: any) => u.name === session?.user?.name);
 
     if (user){
       setUser(user);
@@ -129,7 +129,7 @@ export default function Component() {
           src="/wave_maker_frame3.png"
           width="300"
         />
-        <p className="mt-4 text-center text-5xl font-bold" style={{color: '#0C3659'}}>{userSession ? `${user.name}` : ''}</p>
+        <p className="mt-4 text-center text-5xl font-bold" style={{color: '#0C3659'}}>{session ? `${user.name}` : ''}</p>
       </div>
 
       <br></br>
