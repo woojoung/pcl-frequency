@@ -59,7 +59,7 @@ export default function Component() {
   
   return (
     <main className='flex min-h-screen flex-col items-center space-y-12 p-10' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
-      <div className="bg-white p-7 rounded-lg shadow-md max-w-md mx-auto">
+      <div className="bg-white p-5 rounded-lg shadow-md max-w-md mx-auto">
         <div className="flex justify-between items-center mb-4" onClick={onClickRefresh}>
           <h2 className="text-lg font-semibold text-gray-400" style={{color: '#0C3659'}} >Wave Maker Frequency</h2>
           <button className="flex items-center px-4 py-2 focus:ring" style={{color: '#0C3659'}}>
@@ -102,8 +102,11 @@ export default function Component() {
         <p className="mt-4 text-center text-5xl font-bold" style={{color: '#0C3659'}}>{session ? `${user.name}` : ''}</p>
       </div>
 
+      <br></br>
+      <br></br>
+
       <div className="bg-white bg-opacity-70 p-7 rounded-lg shadow-md max-w-md mx-auto">
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 justify-center">
             {(() => {
               const stars = [];
               for (let index = 0; index < 14; index++) {
