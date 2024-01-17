@@ -51,6 +51,10 @@ export default function Component() {
   useEffect(() => {
     // 세션 정보가 없으면 로그인 페이지로 리디렉션
       if (typeof userSession === 'undefined') {
+        console.log('userSession',userSession)
+        console.log('typeof userSession',userSession)
+        console.log('session',session)
+        console.log('typeof session',session)
         alert('세션 만료')
         router.push('/');
       }
