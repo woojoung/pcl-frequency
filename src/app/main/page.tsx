@@ -12,8 +12,7 @@ import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } 
 export default function Component() {
   const { data: session } = useSession();
   const router = useRouter();
-
-  const [userSession, setUserSession]: any = useState(null);
+  const [userSession, setUserSession] = useState<any>(null);
   const [user, setUser] = useState({name: ''});
   const [users, setUsers] = useState([]);
   const [total, setTotalFrequency] = useState(0);
@@ -38,35 +37,25 @@ export default function Component() {
       .reduce((sum, key) => sum + user[key], 0)
       totalFrequency = totalFrequency > 14 ? 14 : totalFrequency;
       setTotalFrequency(totalFrequency ?? 0);
-    } else { 
-      router.push('/');
     }
-
     
   };
 
   const onClickRefresh = async () => {
     await findUsers();
   };
-
   useEffect(() => {
     setUserSession(session);
-
   }, []);
 
   useEffect(() => {
-    if (!session || !session.user) {
-      // 페이지가 마운트될 때 세션을 확인
-      console.log(session);
-      console.log(typeof session);
-      if (typeof session === 'undefined') {
-        // 세션 정보가 없으면 로그인 페이지로 리디렉션
+    // 세션 정보가 없으면 로그인 페이지로 리디렉션
+      if (typeof userSession === 'undefined') {
         alert('세션 만료')
         router.push('/');
       }
-    }
     findUsers();
-  }, [session, router]);
+  }, [userSession, router]);
 
   
   return (
@@ -116,7 +105,7 @@ export default function Component() {
 
       <br></br>
 
-      <div className="bg-white bg-opacity-70 p-7 rounded-lg shadow-md max-w-md mx-auto">
+      <div className="bg-white bg-opacity-70 p-11 rounded-lg shadow-md ">
         <div className="flex flex-wrap gap-1 justify-center">
             {(() => {
               const stars = [];
@@ -129,12 +118,18 @@ export default function Component() {
                     <FrequencyShadowIcon className="text-gray-300" color="" />
                   )}
                 </div>)
-                // Add a new row every 5 stars
-                if ((index + 1) % 5 === 0) {
-                  stars.push(<div key={`row-${index}`} className="w-4 h-10" />);
-                }
+                
               }
-              return stars;
+              const chunkSize = 5;
+              const chunkedArray = [];
+
+              for (let i = 0; i < stars.length; i += chunkSize) {
+                const chunk = stars.slice(i, i + chunkSize);
+                chunk.push(<div key={`row-${i}`} className="w-4 h-10" />);
+                chunkedArray.push(chunk);
+              }
+
+              return chunkedArray;
             })()}
          </div>
       </div>
