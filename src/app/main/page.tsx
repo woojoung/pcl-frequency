@@ -1,7 +1,6 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation';
 import firestore from "../firebase/firestore";
 import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } from 'firebase/firestore';
 
@@ -11,8 +10,6 @@ import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } 
  */
 export default function Component() {
   const { data: session } = useSession();
-  const router = useRouter();
-
   const [user, setUser] = useState({name: ''});
   const [users, setUsers] = useState([]);
   const [total, setTotalFrequency] = useState(0);
@@ -43,20 +40,13 @@ export default function Component() {
   };
 
   useEffect(() => {
-    // 페이지가 마운트될 때 세션을 확인
-    if (!session) {
-      // 세션 정보가 없으면 로그인 페이지로 리디렉션
-      alert("세션 정보가 만료되어 로그인 화면으로 이동합니다.")
-      router.push('/');
-    }
     findUsers();
+  }, []);
 
-    return() => {
-      return;
-    }
-  }, [session, router]);
-
-
+  
+  // console.log('session?.user?.name', JSON.stringify(session));
+  // console.log('users', users);
+  // console.log('user', user);
   return (
     <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto">
       <div className="flex justify-between items-center mb-4">
