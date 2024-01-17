@@ -25,7 +25,7 @@ export default function Login() {
         alert('올바른 번호를 입력하세요!')
         setPins(['', '', '', ''])
         refs.current[0].current?.focus();
-        router.push('/')
+        // router.push('/')
       }
     });
     
