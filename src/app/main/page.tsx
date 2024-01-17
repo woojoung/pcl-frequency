@@ -1,6 +1,7 @@
 'use client'
 import React, { useRef, useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation';
 import firestore from "../firebase/firestore";
 import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } from 'firebase/firestore';
 
@@ -10,6 +11,9 @@ import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } 
  */
 export default function Component() {
   const { data: session } = useSession();
+  const router = useRouter();
+
+  const [userSession, setUserSession] = useState<any>(null)
   const [user, setUser] = useState({name: ''});
   const [users, setUsers] = useState([]);
   const [total, setTotalFrequency] = useState(0);
@@ -25,7 +29,7 @@ export default function Component() {
     console.log('users: ', users)
     setUsers(users)
 
-    const user: any = users.find((u: any) => u.name === session?.user?.name);
+    const user: any = users.find((u: any) => u.name === userSession?.user?.name);
 
     if (user){
       setUser(user);
@@ -40,8 +44,18 @@ export default function Component() {
   };
 
   useEffect(() => {
+    setUserSession(session)
+  }, [])
+
+  useEffect(() => {
+    // 페이지가 마운트될 때 세션을 확인
+    if (typeof userSession === 'undefined') {
+      // 세션 정보가 없으면 로그인 페이지로 리디렉션
+      alert('세션 만료')
+      router.push('/');
+    }
     findUsers();
-  }, []);
+  }, [userSession, router]);
 
   
   // console.log('session?.user?.name', JSON.stringify(session));
@@ -89,7 +103,7 @@ export default function Component() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center">
           <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>Wave Maker</h1>
           <p className="mt-2 text-center text-lg text-gray-600" style={{color: '#0C3659'}}>Break Time</p>
-          <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>{session ? `${user.name}` : ''}</h1>
+          <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>{userSession ? `${user.name}` : ''}</h1>
         </div>
         
       </div>
