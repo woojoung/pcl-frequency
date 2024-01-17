@@ -38,26 +38,33 @@ export default function Component() {
       totalFrequency = totalFrequency > 14 ? 14 : totalFrequency;
       setTotalFrequency(totalFrequency ?? 0);
     }
+
+    // 세션 정보가 없으면 로그인 페이지로 리디렉션
+    if (session && session.user) {
+      console.log('session')
+      console.log('userSession',userSession)
+      console.log('typeof userSession',userSession)
+      console.log('session',session)
+      console.log('typeof session',session)
+      setUserSession(session);
+      
+    } else {
+      console.log('!session')
+      console.log('userSession',userSession)
+      console.log('typeof userSession',userSession)
+      console.log('session',session)
+      console.log('typeof session',session)
+      alert('세션 만료')
+      router.push('/');
+    }    
     
   };
 
   const onClickRefresh = async () => {
     await findUsers();
   };
-  useEffect(() => {
-    setUserSession(session);
-  }, []);
 
   useEffect(() => {
-    // 세션 정보가 없으면 로그인 페이지로 리디렉션
-      if (typeof userSession === 'undefined') {
-        console.log('userSession',userSession)
-        console.log('typeof userSession',userSession)
-        console.log('session',session)
-        console.log('typeof session',session)
-        alert('세션 만료')
-        router.push('/');
-      }
     findUsers();
   }, [userSession, router]);
 
