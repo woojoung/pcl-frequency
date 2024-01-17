@@ -69,8 +69,12 @@ export default function Login() {
   
     return (
       <main className='flex min-h-screen flex-col items-center space-y-12 p-24' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
-        <h1 className="mt-4 text-center text-6xl font-bold" style={{color: '#0C3659'}}>Wave Maker</h1>
-        <p className="mt-2 text-center text-lg text-gray-600" style={{color: '#0C3659'}}>Break Time</p>
+
+        <p className="mt-4 text-center text-6xl font-bold" style={{color: '#0C3659'}}>Wave</p>
+        <p className="text-center text-6xl font-bold" style={{color: '#0C3659', marginTop: '10%'}}>Maker</p>
+
+        <p className="mt-2 text-center text-lg text-gray-600" style={{color: '#0C3659', marginTop: '5%'}}>Break Time</p>
+
         <div>
           <div style={{ display: 'flex', marginBottom: '10px' }}>
               {pins.map((pin, index) => (
@@ -86,11 +90,13 @@ export default function Login() {
                   ref={inputRefs.current[index]}
                   className="w-14 text-center text-lg font-semibold border rounded-md p-2 bg-gray-400"
                   style={{
-                    width: '50px', // 각 입력란의 너비 조절
-                    marginRight: '10px', // 입력란 간의 간격 조절
-                    border: '1px solid #ccc',
+                    width: '60px', // 각 입력란의 너비 조절
+                    height: '60px', // 각 입력란의 너비 조절
+                    marginRight: '20px', // 입력란 간의 간격 조절
+                    border: '2px solid #ccc',
                     textAlign: 'center',
                     color: 'black', // 텍스트 색상을 빨간색으로 지정
+                    fontSizeAdjust: 'inherit'
                   }}
                 />
                 

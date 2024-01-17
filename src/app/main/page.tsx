@@ -42,6 +42,10 @@ export default function Component() {
     
   };
 
+  const onClickRefresh = async () => {
+    await findUsers();
+  };
+
   useEffect(() => {
     // // 페이지가 마운트될 때 세션을 확인
     // if (typeof session === 'undefined') {
@@ -57,105 +61,75 @@ export default function Component() {
   // console.log('users', users);
   // console.log('user', user);
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-400"style={{color: '#0C3659'}}>Wave Maker Frequency</h2>
-      </div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>{user ? `${14 - total}` : 0}</span>
-          <span><FrequencyIcon color="#0C3659" width={10} height={10} style={{ color: '#0C3659' }} /></span>
-          <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>until break time</span>
-          
+    <main className='flex min-h-screen flex-col items-center space-y-12 p-10' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
+      <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto">
+        <div className="flex justify-between items-center mb-4" onClick={onClickRefresh}>
+          <h2 className="text-lg font-semibold text-gray-400" style={{color: '#0C3659'}} >Wave Maker Frequency</h2>
+          <button className="flex items-center px-4 py-2 focus:ring" style={{color: '#0C3659'}}>
+              
+              <RefreshIcon style={{color: '#0C3659'}} />
+              {/* <span className="mx-0">Refresh</span> */}
+          </button>
         </div>
-        <div className="flex items-baseline">
-          <span className="text-3xl font-semibold" style={{color: '#0C3659'}}>{user ? `${total}` : 0}</span>
-          {/* <span className="text-lg text-gray-500 ml-1">/14★</span> */}
-          <span className="text-lg text-gray-500 ml-1">/14</span>
-          <span><FrequencyIcon color="#0C3659" width={15} height={15} style={{ color: '#0C3659' }} /></span>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>{user ? `${14 - total}` : 0}</span>
+            <span><FrequencyIcon color="#0C3659" width={10} height={10} style={{ color: '#0C3659' }} /></span>
+            <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>until break time</span>
+            
+          </div>
+          <div className="flex items-baseline">
+            <span className="text-3xl font-semibold" style={{color: '#0C3659'}}>{user ? `${total}` : 0}</span>
+            {/* <span className="text-lg text-gray-500 ml-1">/14★</span> */}
+            <span className="text-lg text-gray-500 font-semibold ml-1" style={{ color: '#0C3659' }} >/14</span>
+            <span><FrequencyIcon color="#0C3659" width={20} height={15} style={{ color: '#0C3659' }} /></span>
+          </div>
         </div>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
-        <div
-          className="h-full rounded-full"
-          style={{ width: `${Math.round((total/14)*100).toFixed(0)}%`, backgroundColor: '#0C3659'}}
-        ></div>
-      </div>
-      <br></br>
+        <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${Math.round((total/14)*100).toFixed(0)}%`, backgroundColor: '#0C3659'}}
+          ></div>
+        </div>
+        <br></br>
 
-      <div className="mb-4 relative">
+      </div>
+
+      <div className="mb-4 relative" >
         <img
           className="w-full h-auto rounded-lg"
           height="550"
-          // src="/login.png"
-          style={{
-            aspectRatio: "300/150",
-            objectFit: "cover",
-            backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover'
-          }}
+          src="/wave_maker_frame3.png"
           width="300"
         />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center">
-          <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>Wave Maker</h1>
-          <p className="mt-2 text-center text-lg text-gray-600" style={{color: '#0C3659'}}>Break Time</p>
-          <h1 className="mt-4 text-center text-3xl font-bold" style={{color: '#0C3659'}}>{session ? `${user.name}` : ''}</h1>
-        </div>
-        
+        <p className="mt-4 text-center text-5xl font-bold" style={{color: '#0C3659'}}>{session ? `${user.name}` : ''}</p>
       </div>
-      
-      <div className="flex justify-center items-center">
-        <div className="bg-gray-100 p-2 rounded-lg">
+
+      <div className="bg-white bg-opacity-80 p-3 rounded-lg shadow-md max-w-md mx-auto">
+        <div className="p-2">
           <div className="flex flex-wrap gap-1">
             {(() => {
               const stars = [];
               for (let index = 0; index < 14; index++) {
-                stars.push(<div key={index} className="w-12 h-6">
+                stars.push(<div key={index} className="w-9 h-10">
                   {index < total ? (
-                    // <StarIcon color="#0C3659" style={{ color: '#0C3659' }} />
                     <FrequencyIcon color="#0C3659" style={{ color: '#0C3659' }} />
                   ) : (
-                    // <StarIcon className="text-gray-300" color="" />
                     <FrequencyShadowIcon className="text-gray-300" color="" />
                   )}
                 </div>)
                 // Add a new row every 5 stars
                 if ((index + 1) % 5 === 0) {
-                  stars.push(<div key={`row-${index}`} className="w-full h-2" />);
+                  stars.push(<div key={`row-${index}`} className="" />);
                 }
               }
-              
               return stars;
             })()}
           </div>
         </div>
       </div>
-      <br></br>
-      
 
-    </div>
-    
-    
-    
-  )
-}
-
-
-function StarIcon({ color, ...props } : any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill={color}/>
-    </svg>
+    </main>    
   )
 }
 
@@ -187,4 +161,29 @@ function FrequencyShadowIcon({ color, ...props } : any) {
       </defs>
     </svg>
   )
+}
+
+function RefreshIcon({ color, ...props }: any) {
+  return (
+    <svg 
+      {...props}
+      height="15px" 
+      version="1.1" 
+      viewBox="0 0 16 16" 
+      width="14px" 
+      xmlns="http://www.w3.org/2000/svg" 
+      style={{color: '#0C3659'}}
+      >
+      <title/>
+      <desc/>
+      <defs/>
+      <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+        <g fill="#000000" id="Core" transform="translate(-424.000000, -340.000000)">
+          <g id="refresh" transform="translate(424.000000, 340.000000)">
+            <path d="M13.6,2.4 C12.2,0.9 10.2,0 8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C11.7,16 14.8,13.4 15.7,10 L13.6,10 C12.8,12.3 10.6,14 8,14 C4.7,14 2,11.3 2,8 C2,4.7 4.7,2 8,2 C9.7,2 11.1,2.7 12.2,3.8 L9,7 L16,7 L16,0 L13.6,2.4 L13.6,2.4 Z" id="Shape"/>
+          </g>
+        </g>
+      </g>
+    </svg>
+  );
 }
