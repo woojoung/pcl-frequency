@@ -92,7 +92,8 @@ export default function Login() {
                   style={{
                     width: '60px', // 각 입력란의 너비 조절
                     height: '60px', // 각 입력란의 너비 조절
-                    marginRight: '20px', // 입력란 간의 간격 조절
+                    marginRight: '10px', // 입력란 간의 간격 조절
+                    marginLeft: '10px', // 입력란 간의 간격 조절
                     border: '2px solid #ccc',
                     textAlign: 'center',
                     color: 'black', // 텍스트 색상을 빨간색으로 지정

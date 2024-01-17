@@ -13,6 +13,7 @@ export default function Component() {
   const { data: session } = useSession();
   const router = useRouter();
 
+  const [userSession, setUserSession]: any = useState(null);
   const [user, setUser] = useState({name: ''});
   const [users, setUsers] = useState([]);
   const [total, setTotalFrequency] = useState(0);
@@ -28,7 +29,7 @@ export default function Component() {
     console.log('users: ', users)
     setUsers(users)
 
-    const user: any = users.find((u: any) => u.name === session?.user?.name);
+    const user: any = users.find((u: any) => u.name === userSession?.user?.name);
 
     if (user){
       setUser(user);
@@ -37,6 +38,8 @@ export default function Component() {
       .reduce((sum, key) => sum + user[key], 0)
       totalFrequency = totalFrequency > 14 ? 14 : totalFrequency;
       setTotalFrequency(totalFrequency ?? 0);
+    } else { 
+      router.push('/');
     }
 
     
@@ -47,24 +50,33 @@ export default function Component() {
   };
 
   useEffect(() => {
-    // // 페이지가 마운트될 때 세션을 확인
-    // if (typeof session === 'undefined') {
-    //   // 세션 정보가 없으면 로그인 페이지로 리디렉션
-    //   alert('세션 만료')
-    //   router.push('/');
-    // }
+    setUserSession(session);
+
+  }, []);
+
+  useEffect(() => {
+    if (!session || !session.user) {
+      // 페이지가 마운트될 때 세션을 확인
+      console.log(session);
+      console.log(typeof session);
+      if (typeof session === 'undefined') {
+        // 세션 정보가 없으면 로그인 페이지로 리디렉션
+        alert('세션 만료')
+        router.push('/');
+      }
+    }
     findUsers();
   }, [session, router]);
 
   
   return (
     <main className='flex min-h-screen flex-col items-center space-y-12 p-10' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
-      <div className="bg-white p-5 rounded-lg shadow-md max-w-md mx-auto">
+      <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
         <div className="flex justify-between items-center mb-4" onClick={onClickRefresh}>
           <h2 className="text-lg font-semibold text-gray-400" style={{color: '#0C3659'}} >Wave Maker Frequency</h2>
           <button className="flex items-center px-4 py-2 focus:ring" style={{color: '#0C3659'}}>
               
-              <RefreshIcon style={{color: '#0C3659'}} />
+              <RefreshIcon className="hover:bg-sky-300 hover:rounded" />
               {/* <span className="mx-0">Refresh</span> */}
           </button>
         </div>
@@ -99,10 +111,9 @@ export default function Component() {
           src="/wave_maker_frame3.png"
           width="300"
         />
-        <p className="mt-4 text-center text-5xl font-bold" style={{color: '#0C3659'}}>{session ? `${user.name}` : ''}</p>
+        <p className="mt-4 text-center text-5xl font-bold" style={{color: '#0C3659'}}>{userSession ? `${user.name}` : ''}</p>
       </div>
 
-      <br></br>
       <br></br>
 
       <div className="bg-white bg-opacity-70 p-7 rounded-lg shadow-md max-w-md mx-auto">
@@ -110,7 +121,8 @@ export default function Component() {
             {(() => {
               const stars = [];
               for (let index = 0; index < 14; index++) {
-                stars.push(<div key={index} className="w-9 h-10">
+                
+                stars.push(<div key={index} className="w-9 h-10 flex items-center justify-center">
                   {index < total ? (
                     <FrequencyIcon color="#0C3659" style={{ color: '#0C3659' }} />
                   ) : (
@@ -119,7 +131,7 @@ export default function Component() {
                 </div>)
                 // Add a new row every 5 stars
                 if ((index + 1) % 5 === 0) {
-                  stars.push(<div key={`row-${index}`} className="" />);
+                  stars.push(<div key={`row-${index}`} className="w-4 h-10" />);
                 }
               }
               return stars;
@@ -165,17 +177,16 @@ function RefreshIcon({ color, ...props }: any) {
   return (
     <svg 
       {...props}
-      height="15px" 
+      height="20px" 
       version="1.1" 
       viewBox="0 0 16 16" 
-      width="14px" 
+      width="18px" 
       xmlns="http://www.w3.org/2000/svg" 
-      style={{color: '#0C3659'}}
       >
       <title/>
       <desc/>
       <defs/>
-      <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+      <g fill="none" fillRule="evenodd" id="Page-1" stroke="none" strokeWidth="1">
         <g fill="#000000" id="Core" transform="translate(-424.000000, -340.000000)">
           <g id="refresh" transform="translate(424.000000, 340.000000)">
             <path d="M13.6,2.4 C12.2,0.9 10.2,0 8,0 C3.6,0 0,3.6 0,8 C0,12.4 3.6,16 8,16 C11.7,16 14.8,13.4 15.7,10 L13.6,10 C12.8,12.3 10.6,14 8,14 C4.7,14 2,11.3 2,8 C2,4.7 4.7,2 8,2 C9.7,2 11.1,2.7 12.2,3.8 L9,7 L16,7 L16,0 L13.6,2.4 L13.6,2.4 Z" id="Shape"/>
