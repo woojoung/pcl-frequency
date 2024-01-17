@@ -11,7 +11,7 @@ export default function Login() {
 
   const handleSubmit = async (refs: any) => {
     const pinNumber = pins.join('');
-    console.log('입력된 핀 넘버:', pinNumber);
+    // console.log('입력된 핀 넘버:', pinNumber);
     if(pinNumber.length !== 4) return;
 
     await signIn("credentials", {
@@ -51,7 +51,7 @@ export default function Login() {
       newPins = [...pins];
       newPins[index] = value;
       setPins(newPins);
-      console.log('newPins', JSON.stringify(newPins));
+      // console.log('newPins', JSON.stringify(newPins));
     }
 
     // 입력값이 변경될 때 해당 입력란으로 포커스 이동

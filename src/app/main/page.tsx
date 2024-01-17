@@ -10,7 +10,7 @@ import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } 
  * @see https://v0.dev/t/0UoNA5t2BOk
  */
 export default function Component() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [userSession, setUserSession] = useState<any>(null);
   const [user, setUser] = useState({name: ''});
@@ -41,19 +41,21 @@ export default function Component() {
 
     // 세션 정보가 없으면 로그인 페이지로 리디렉션
     if (session && session.user) {
+      console.log('status', status)
       console.log('session')
       console.log('userSession',userSession)
-      console.log('typeof userSession',userSession)
+      console.log('typeof userSession', typeof userSession)
       console.log('session',session)
-      console.log('typeof session',session)
+      console.log('typeof session', typeof session)
       setUserSession(session);
       
     } else {
+      console.log('status', status)
       console.log('!session')
       console.log('userSession',userSession)
-      console.log('typeof userSession',userSession)
+      console.log('typeof userSession', typeof userSession)
       console.log('session',session)
-      console.log('typeof session',session)
+      console.log('typeof session', typeof session)
       alert('세션 만료')
       router.push('/');
     }    
@@ -66,7 +68,23 @@ export default function Component() {
 
   useEffect(() => {
     findUsers();
-  }, [userSession, router]);
+  }, []);
+
+  useEffect(() => {
+    if (status === 'loading') {
+      console.log('status', status)
+      return
+    };
+
+    if (!session) {
+      console.log('userSession',userSession)
+      console.log('typeof userSession', typeof userSession)
+      console.log('session',session)
+      console.log('typeof session', typeof session)
+      console.log('status', status)
+      router.push('/');
+    }
+  }, [session, router]);
 
   
   return (
