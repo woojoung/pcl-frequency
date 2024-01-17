@@ -83,7 +83,7 @@ export default function Component() {
       <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
         <div
           className="h-full rounded-full"
-          style={{ width: `${Math.round((total/14)*100).toFixed(0)}%`, color: '#0C3659'}}
+          style={{ width: `${Math.round((total/14)*100).toFixed(0)}%`, backgroundColor: '#0C3659'}}
         ></div>
       </div>
       <br></br>
