@@ -64,7 +64,7 @@ export default function Login() {
   }, [pins]);
   
     return (
-      <main className='flex min-h-screen flex-col items-center space-y-12 p-24' style={{ backgroundImage: 'url("/login.png")', backgroundSize: 'cover' }}>
+      <main className='flex min-h-screen flex-col items-center space-y-12 p-24' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
         <h1 className="mt-4 text-center text-6xl font-bold" style={{color: '#0C3659'}}>Wave Maker</h1>
         <p className="mt-2 text-center text-lg text-gray-600" style={{color: '#0C3659'}}>Break Time</p>
         <div>

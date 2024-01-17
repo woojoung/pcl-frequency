@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session, JWT, AdapterUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { collection, getFirestore, getDocs, query } from "firebase/firestore";
 import firestore from "../../../firebase/firestore";
@@ -51,6 +51,17 @@ const handler = NextAuth({
       },
     }),
   ],
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
 });
 
 export { handler as GET, handler as POST };

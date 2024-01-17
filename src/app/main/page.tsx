@@ -83,7 +83,7 @@ export default function Component() {
       <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
         <div
           className="h-full bg-blue-500 rounded-full"
-          style={{ width: `${Math.round((total/14)*100).toFixed(0)}%` }}
+          style={{ width: `${Math.round((total/14)*100).toFixed(0)}%`, color: '#0C3659'}}
         ></div>
       </div>
       <br></br>
@@ -96,7 +96,7 @@ export default function Component() {
           style={{
             aspectRatio: "300/150",
             objectFit: "cover",
-            backgroundImage: 'url("/login.png")', backgroundSize: 'cover'
+            backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover'
           }}
           width="300"
         />
