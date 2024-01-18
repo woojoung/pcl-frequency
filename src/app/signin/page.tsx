@@ -61,9 +61,6 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (session && session.user) {
-      router.push('/main');
-    }
     handleSubmit(inputRefs);
   }, [pins]);
   

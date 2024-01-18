@@ -39,26 +39,26 @@ export default function Component() {
       setTotalFrequency(totalFrequency ?? 0);
     }
 
-    // 세션 정보가 없으면 로그인 페이지로 리디렉션
-    if (session && session.user) {
-      console.log('status', status)
-      console.log('session')
-      console.log('userSession',userSession)
-      console.log('typeof userSession', typeof userSession)
-      console.log('session',session)
-      console.log('typeof session', typeof session)
-      setUserSession(session);
+    // // 세션 정보가 없으면 로그인 페이지로 리디렉션
+    // if (session && session.user) {
+    //   console.log('status', status)
+    //   console.log('session')
+    //   console.log('userSession',userSession)
+    //   console.log('typeof userSession', typeof userSession)
+    //   console.log('session',session)
+    //   console.log('typeof session', typeof session)
+    //   setUserSession(session);
       
-    } else {
-      console.log('status', status)
-      console.log('!session')
-      console.log('userSession',userSession)
-      console.log('typeof userSession', typeof userSession)
-      console.log('session',session)
-      console.log('typeof session', typeof session)
-      alert('세션 만료')
-      router.push('/');
-    }    
+    // } else {
+    //   console.log('status', status)
+    //   console.log('!session')
+    //   console.log('userSession',userSession)
+    //   console.log('typeof userSession', typeof userSession)
+    //   console.log('session',session)
+    //   console.log('typeof session', typeof session)
+    //   alert('세션 만료')
+    //   router.push('/');
+    // }    
     
   };
 
@@ -71,19 +71,19 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
-    if (status === 'loading') {
-      console.log('status', status)
-      return
-    };
+    // if (status === 'loading') {
+    //   console.log('status', status)
+    //   return
+    // };
 
-    if (!session) {
-      console.log('userSession',userSession)
-      console.log('typeof userSession', typeof userSession)
-      console.log('session',session)
-      console.log('typeof session', typeof session)
-      console.log('status', status)
-      router.push('/');
-    }
+    // if (!session) {
+    //   console.log('userSession',userSession)
+    //   console.log('typeof userSession', typeof userSession)
+    //   console.log('session',session)
+    //   console.log('typeof session', typeof session)
+    //   console.log('status', status)
+    //   router.push('/');
+    // }
   }, [session, router]);
 
   
@@ -101,7 +101,7 @@ export default function Component() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>{user ? `${14 - total}` : 0}</span>
-            <span><FrequencyIcon color="#0C3659" width={10} height={10} style={{ color: '#0C3659' }} /></span>
+            <span><FrequencyIcon color="#0C3659" width={9.5} height={10} style={{ color: '#0C3659' }} /></span>
             <span className="text-sm text-gray-500 ml-1" style={{color: '#0C3659'}}>until break time</span>
             
           </div>
@@ -109,7 +109,7 @@ export default function Component() {
             <span className="text-3xl font-semibold" style={{color: '#0C3659'}}>{user ? `${total}` : 0}</span>
             {/* <span className="text-lg text-gray-500 ml-1">/14★</span> */}
             <span className="text-lg text-gray-500 font-semibold ml-1" style={{ color: '#0C3659' }} >/14</span>
-            <span><FrequencyIcon color="#0C3659" width={20} height={15} style={{ color: '#0C3659' }} /></span>
+            <span><FrequencyIcon color="#0C3659" width={14} height={15} style={{ color: '#0C3659' }} /></span>
           </div>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 relative">
@@ -135,11 +135,10 @@ export default function Component() {
       <br></br>
 
       <div className="bg-white bg-opacity-70 p-11 rounded-lg shadow-md">
-        <div className="flex flex-wrap gap-1 justify-center">
+        <div className="grid grid-cols-5 gap-1 justify-center">
             {(() => {
               const stars = [];
               for (let index = 0; index < 14; index++) {
-                
                 stars.push(<div key={index} className="w-9 h-10 flex items-center justify-center">
                   {index < total ? (
                     <FrequencyIcon color="#0C3659" style={{ color: '#0C3659' }} />
@@ -149,16 +148,17 @@ export default function Component() {
                 </div>)
                 
               }
-              const chunkSize = 5;
-              const chunkedArray = [];
+              return stars;
+              // const chunkSize = 5;
+              // const chunkedArray = [];
 
-              for (let i = 0; i < stars.length; i += chunkSize) {
-                const chunk = stars.slice(i, i + chunkSize);
-                chunk.push(<div key={`row-${i}`} className="w-4 h-10" />);
-                chunkedArray.push(chunk);
-              }
+              // for (let i = 0; i < stars.length; i += chunkSize) {
+              //   const chunk = stars.slice(i, i + chunkSize);
+              //   chunk.push(<div key={`row-${i}`} className="w-4 h-10" />);
+              //   chunkedArray.push(chunk);
+              // }
 
-              return chunkedArray;
+              // return chunkedArray;
             })()}
          </div>
       </div>
