@@ -33,12 +33,12 @@ export default function Component() {
     const amount = parseInt(score.trim());
     const roundNum = parseInt(roundId.trim());
     // validate
-    if(amount > 3 || amount < 0 || isNaN(amount)) {
-      alert("프리퀀시를 확인해주세요 (0 < 프리퀀시 < 4)");
-      return;
-    }
     if(roundNum > 12 || roundNum < 0 || isNaN(roundNum)) {
       alert("게임번호를 확인해주세요");
+      return;
+    }
+    if(amount > 3 || amount < 0 || isNaN(amount)) {
+      alert("프리퀀시를 확인해주세요 (0 < 프리퀀시 < 4)");
       return;
     }
 
