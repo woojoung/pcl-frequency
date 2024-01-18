@@ -135,11 +135,11 @@ export default function Component() {
       <br></br>
 
       <div className="bg-white bg-opacity-70 p-11 rounded-lg shadow-md">
-        <div className="grid grid-cols-5 gap-1 justify-center">
+        <div className="grid grid-cols-5 gap-3">
             {(() => {
               const stars = [];
               for (let index = 0; index < 14; index++) {
-                stars.push(<div key={index} className="w-9 h-10 flex items-center justify-center">
+                stars.push(<div key={index} className="col-span-1 w-9 h-10 flex items-center justify-center">
                   {index < total ? (
                     <FrequencyIcon color="#0C3659" style={{ color: '#0C3659' }} />
                   ) : (
