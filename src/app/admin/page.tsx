@@ -14,6 +14,7 @@ export default function Component() {
   const [roundId, setRoundId] = useState('');
   const [score, setRoundScore] = useState('');
   const [users, setUsers] : any = useState([]);
+  // const [loading, setLoading] = useState(true);
 
   const findUsers = async () => {
     const usersRef = query(collection(firestore, "users"), orderBy("id", "asc"))
@@ -21,6 +22,7 @@ export default function Component() {
     const users: any = usersSnapshot.docs.map((doc) => doc.data());
     console.log('users: ', users);
     setUsers(users);
+    // setLoading(false);
   };
 
   useEffect(() => {
@@ -63,9 +65,11 @@ export default function Component() {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto" style={{ backgroundSize: 'cover' }}>
+      {/* {loading && (<LoadingSpinner />)} */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-lg font-semibold" style={{color: '#0C3659'}}>Wave Maker Frequency</h1>
         {/* <SettingsIcon className="text-gray-600" /> */}
+        <RefreshIcon className="text-gray-600 hover:bg-sky-300 hover:rounded" onClick={findUsers}/>
       </div>
       <div className="mb-2">
         <span className="text-sm font-medium" style={{color: '#0C3659'}}>Admin</span>
@@ -195,4 +199,31 @@ function SettingsIcon(props: any) {
   )
 }
 
+function RefreshIcon({ color, ...props }: any) {
+  return (
+    <button className="flex items-center px-2 py-3 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-sky-600 rounded-lg hover:bg-sky-500 focus:outline-none focus:ring focus:ring-sky-300 focus:ring-opacity-80">
+      <svg className="w-5 h-5 mx-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+      </svg>
 
+      <span className="mx-1">Refresh</span>
+    </button>
+  );
+}
+
+// function LoadingSpinner({ color, ...props }: any) {
+//   return (
+//     <div className="relative bg-white bg-opacity-60 z-10 h-full w-full flex items-center justify-center">
+//     <div className="flex items-center">
+//       <span className="text-3xl mr-4 text-gray-800">Loading</span>
+//       <svg className="animate-spin h-8 w-8 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none"
+//         viewBox="0 0 24 24">
+//         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+//         <path className="opacity-75" fill="currentColor"
+//           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+//         </path>
+//       </svg>
+//     </div>
+//   </div>
+//   )
+// }
