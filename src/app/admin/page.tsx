@@ -30,19 +30,19 @@ export default function Component() {
   const registerScore = async () => {
     console.log('registerScore');
     console.log('userId', userId);
-    const amount = parseInt(score);
-    const roundNum = parseInt(roundId);
+    const amount = parseInt(score.trim());
+    const roundNum = parseInt(roundId.trim());
     // validate
-    if(amount > 3 || amount < 0) {
+    if(amount > 3 || amount < 0 || !isNaN(amount)) {
       alert("프리퀀시를 확인해주세요 (0 < 프리퀀시 < 4)");
       return;
     }
-    if(roundNum > 12 || roundNum < 0) {
+    if(roundNum > 12 || roundNum < 0 || !isNaN(roundNum)) {
       alert("게임번호를 확인해주세요");
       return;
     }
 
-    const usersRef = query(collection(firestore, "users"), where("id", "==", parseInt(userId ?? '0')));
+    const usersRef = query(collection(firestore, "users"), where("id", "==", parseInt(userId.trim() ?? '0')));
     // 쿼리 실행
     const querySnapshot = await getDocs(usersRef);
     // 쿼리 결과 확인
@@ -114,6 +114,7 @@ export default function Component() {
           type="text"
           placeholder='조 번호'
           className="w-full text-center text-lg font-semibold border rounded-md p-2"
+          pattern="\d*"
           maxLength={2}
           value={userId}
           onChange={(e) => setUserId(e.target.value)}
@@ -129,6 +130,7 @@ export default function Component() {
           type="text"
           placeholder='게임 번호'
           className="w-full text-center text-lg font-semibold border rounded-md p-2"
+          pattern="\d*"
           maxLength={1}
           value={roundId}
           onChange={(e) => setRoundId(e.target.value)}
@@ -144,6 +146,7 @@ export default function Component() {
           type="text"
           placeholder='프리퀀시 수'
           className="w-full text-center text-lg font-semibold border rounded-md p-2"
+          pattern="\d*"
           maxLength={1}
           value={score}
           onChange={(e) => setRoundScore(e.target.value)}
