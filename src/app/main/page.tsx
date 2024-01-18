@@ -42,20 +42,19 @@ export default function Component() {
   };
 
   useEffect(() => {
+    console.log('session',session);
+    console.log('typeof session', typeof session);
+    console.log('status', status);
+
     if (status === 'loading') return;
 
     if (!session) {
-      console.log('session',session);
-      console.log('typeof session', typeof session);
-      console.log('status', status);
+      console.log('세션 만료');
       alert('세션 만료');
       router.push('/');
     }
-  }, [session, router, status]);
-
-  useEffect(() => {
     findUsers();
-  }, []);
+  }, [session, router, status]);
   
   return (
     <main className='flex min-h-screen flex-col items-center space-y-12 p-10' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
