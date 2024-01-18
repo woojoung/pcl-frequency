@@ -12,9 +12,7 @@ import { doc, getDoc, getDocs, collection, where, query, getFirestore, addDoc } 
 export default function Component() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [userSession, setUserSession] = useState<any>(null);
   const [user, setUser] = useState({name: ''});
-  const [users, setUsers] = useState([]);
   const [total, setTotalFrequency] = useState(0);
 
   const findUsers = async () => {
@@ -22,11 +20,9 @@ export default function Component() {
     const usersSnapshot = await getDocs(usersRef)
     if (usersSnapshot.empty) {
       console.log("일치하는 사용자가 없습니다.");
-      setUsers([]);
     } 
     const users: any = usersSnapshot.docs.map((doc) => doc.data());
     console.log('users: ', users)
-    setUsers(users)
 
     const user: any = users.find((u: any) => u.name === session?.user?.name);
 
@@ -38,27 +34,6 @@ export default function Component() {
       totalFrequency = totalFrequency > 14 ? 14 : totalFrequency;
       setTotalFrequency(totalFrequency ?? 0);
     }
-
-    // // 세션 정보가 없으면 로그인 페이지로 리디렉션
-    // if (session && session.user) {
-    //   console.log('status', status)
-    //   console.log('session')
-    //   console.log('userSession',userSession)
-    //   console.log('typeof userSession', typeof userSession)
-    //   console.log('session',session)
-    //   console.log('typeof session', typeof session)
-    //   setUserSession(session);
-      
-    // } else {
-    //   console.log('status', status)
-    //   console.log('!session')
-    //   console.log('userSession',userSession)
-    //   console.log('typeof userSession', typeof userSession)
-    //   console.log('session',session)
-    //   console.log('typeof session', typeof session)
-    //   alert('세션 만료')
-    //   router.push('/');
-    // }    
     
   };
 
@@ -67,25 +42,20 @@ export default function Component() {
   };
 
   useEffect(() => {
-    findUsers();
-  }, []);
+    if (status === 'loading') return;
+
+    if (!session) {
+      console.log('session',session);
+      console.log('typeof session', typeof session);
+      console.log('status', status);
+      alert('세션 만료');
+      router.push('/');
+    }
+  }, [session, router, status]);
 
   useEffect(() => {
-    // if (status === 'loading') {
-    //   console.log('status', status)
-    //   return
-    // };
-
-    // if (!session) {
-    //   console.log('userSession',userSession)
-    //   console.log('typeof userSession', typeof userSession)
-    //   console.log('session',session)
-    //   console.log('typeof session', typeof session)
-    //   console.log('status', status)
-    //   router.push('/');
-    // }
-  }, [session, router]);
-
+    findUsers();
+  }, []);
   
   return (
     <main className='flex min-h-screen flex-col items-center space-y-12 p-10' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
@@ -137,28 +107,17 @@ export default function Component() {
       <div className="bg-white bg-opacity-70 p-11 rounded-lg shadow-md">
         <div className="grid grid-cols-5 gap-3">
             {(() => {
-              const stars = [];
+              const frequency = [];
               for (let index = 0; index < 14; index++) {
-                stars.push(<div key={index} className="col-span-1 w-9 h-10 flex items-center justify-center">
+                frequency.push(<div key={index} className="col-span-1 w-9 h-10 flex items-center justify-center">
                   {index < total ? (
                     <FrequencyIcon color="#0C3659" style={{ color: '#0C3659' }} />
                   ) : (
                     <FrequencyShadowIcon className="text-gray-300" color="" />
                   )}
                 </div>)
-                
               }
-              return stars;
-              // const chunkSize = 5;
-              // const chunkedArray = [];
-
-              // for (let i = 0; i < stars.length; i += chunkSize) {
-              //   const chunk = stars.slice(i, i + chunkSize);
-              //   chunk.push(<div key={`row-${i}`} className="w-4 h-10" />);
-              //   chunkedArray.push(chunk);
-              // }
-
-              // return chunkedArray;
+              return frequency;
             })()}
          </div>
       </div>

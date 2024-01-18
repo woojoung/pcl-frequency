@@ -62,10 +62,10 @@ export default function Component() {
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto" style={{backgroundSize: 'cover' }}>
+    <div className="bg-white p-4 rounded-lg shadow-md max-w-md mx-auto" style={{ backgroundSize: 'cover' }}>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-lg font-semibold" style={{color: '#0C3659'}}>Wave Maker Frequency</h1>
-        <SettingsIcon className="text-gray-600" />
+        {/* <SettingsIcon className="text-gray-600" /> */}
       </div>
       <div className="mb-2">
         <span className="text-sm font-medium" style={{color: '#0C3659'}}>Admin</span>
