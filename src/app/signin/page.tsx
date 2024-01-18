@@ -9,7 +9,7 @@ export default function Login() {
   const inputRefs: any = useRef([0, 1, 2, 3].map(() => React.createRef()));
   const router = useRouter();
 
-  const handleSubmit = async (refs: any) => {
+  const handleSubmit = async (pins: string[], refs: any) => {
     const pinNumber = pins.join('');
     // console.log('입력된 핀 넘버:', pinNumber);
     if(pinNumber.length !== 4) return;
@@ -45,7 +45,7 @@ export default function Login() {
 
 
   const handleChange = async (index: number, value: string, refs: any) => {
-    let newPins = [];
+    let newPins: string[] = [];
     // 입력값이 숫자이고, 4자리인지 확인
     if (/^\d*$/.test(refs.current[index].current?.value) && value.length <= 1) {
       newPins = [...pins];
@@ -58,11 +58,9 @@ export default function Login() {
     if (/^\d+$/.test(value) && (index < (refs.current.length - 1))) {
       refs.current[index + 1].current?.focus();
     }
-  };
 
-  useEffect(() => {
-    handleSubmit(inputRefs);
-  }, [pins]);
+    await handleSubmit(newPins, refs);
+  };
   
     return (
       <main className='flex min-h-screen flex-col items-center space-y-12 p-24' style={{ backgroundImage: 'url("/wavemaker.png")', backgroundSize: 'cover' }}>
